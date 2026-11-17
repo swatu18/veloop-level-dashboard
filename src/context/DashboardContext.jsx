@@ -11,6 +11,7 @@ const DashboardContext = createContext(null);
 
 export function DashboardProvider({ children }) {
   const [status, setStatus] = useState('loading'); // 'loading' | 'ready' | 'error'
+  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'earn' | 'rewards' | 'wallet' | 'profile'
   const [user, setUser] = useState(null);
   const [activity, setActivity] = useState([]);
   const [cooldowns, setCooldowns] = useState({}); // { [earningId]: timestampMs }
@@ -292,6 +293,8 @@ export function DashboardProvider({ children }) {
   const value = useMemo(
     () => ({
       status,
+      activeTab,
+      setActiveTab,
       user,
       progress,
       levels: LEVELS,
@@ -320,6 +323,7 @@ export function DashboardProvider({ children }) {
     }),
     [
       status,
+      activeTab,
       user,
       progress,
       activity,

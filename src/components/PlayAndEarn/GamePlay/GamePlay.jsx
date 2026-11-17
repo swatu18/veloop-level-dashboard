@@ -134,8 +134,8 @@ export default function GamePlay({ onFinish, onExit }) {
         const next = [];
         for (const it of prev) {
           const ny = it.y + it.speed * dt;
-          const inVerticalZone = ny >= 65 && ny <= 79;
-          const inHorizontalZone = Math.abs(it.x - basketXRef.current) <= 13.5;
+          const inVerticalZone = ny >= 66 && ny <= 82;
+          const inHorizontalZone = Math.abs(it.x - basketXRef.current) <= 17.5;
 
           if (inVerticalZone && inHorizontalZone) {
             if (it.kind === 'rocket') {

@@ -152,10 +152,10 @@
 }
 
 .previewBasket {
-  width: 96px;
+  width: 148px;
   height: auto;
-  margin-bottom: -10px;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.7));
+  margin-bottom: -8px;
+  filter: drop-shadow(0 10px 22px rgba(229, 184, 79, 0.45));
   transition: transform 0.25s ease;
 }
 
@@ -484,9 +484,9 @@
 
 .basketActor {
   position: absolute;
-  bottom: 6%;
+  bottom: 4%;
   transform: translateX(-50%);
-  width: 145px;
+  width: 196px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -494,18 +494,18 @@
 }
 
 .basketImg {
-  width: 138px;
+  width: 188px;
   height: auto;
-  filter: drop-shadow(0 10px 24px rgba(229, 184, 79, 0.4));
+  filter: drop-shadow(0 12px 26px rgba(229, 184, 79, 0.48));
 }
 
 .basketFloorRing {
-  width: 170px;
-  height: 22px;
-  margin-top: -10px;
+  width: 220px;
+  height: 26px;
+  margin-top: -12px;
   border-radius: 50%;
-  border: 1px solid rgba(229, 184, 79, 0.32);
-  background: radial-gradient(ellipse, rgba(229, 184, 79, 0.25) 0%, transparent 72%);
+  border: 1px solid rgba(229, 184, 79, 0.36);
+  background: radial-gradient(ellipse, rgba(229, 184, 79, 0.28) 0%, transparent 72%);
 }
 
 /* Scoreboard (Screen 2 bottom) */

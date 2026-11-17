@@ -1,6 +1,5 @@
 import React from 'react';
-import { Bell, Menu, Sparkles, SlidersHorizontal } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Bell, Menu, SlidersHorizontal, Sparkles } from 'lucide-react';
 import LevelInfo from '../LevelInfo/LevelInfo';
 import { useDashboard } from '../../context/DashboardContext';
 import { VeCoin } from '../GameTokens/GameTokens';
@@ -9,13 +8,11 @@ import styles from './LevelHero.module.css';
 /**
  * Top Level Hero bar + greeting (PDF §9, Mockup Screen 1).
  *
- * Mobile: matches Screen 1 header (menu icon, notification bell with orange dot,
- *         "Good Morning, VeLooper! 👋", subtitle).
- * Desktop: adds VELOOP brand emblem, nav links, wallet pill, and Quick Demo switch.
+ * Every button navigates to its exact section/tab — never opening the game
+ * unless the user explicitly clicks "XP Catcher".
  */
 export default function LevelHero({ onOpenDemo }) {
-  const { user, setGameOpen, setEarnDrawerOpen } = useDashboard();
-  const location = useLocation();
+  const { user, activeTab, setActiveTab, setGameOpen, setEarnDrawerOpen } = useDashboard();
 
   return (
     <header className={styles.header}>
@@ -30,49 +27,67 @@ export default function LevelHero({ onOpenDemo }) {
           <Menu size={22} />
         </button>
 
-        <Link to="/Lvl-Dashboard" className={styles.brand}>
+        <button
+          type="button"
+          className={styles.brand}
+          onClick={() => setActiveTab('home')}
+        >
           <span className={styles.brandHex} aria-hidden="true">
             V
           </span>
           <span className={styles.brandText}>
             VELOOP <small>REWARDS</small>
           </span>
-        </Link>
+        </button>
 
         <nav className={styles.desktopNav} aria-label="Dashboard sections">
-          <Link
-            to="/Lvl-Dashboard"
-            className={`${styles.navLink} ${
-              location.pathname !== '/Lvl-Dashboard/activity' ? styles.navActive : ''
-            }`}
-          >
-            Dashboard
-          </Link>
           <button
             type="button"
-            className={styles.navLink}
-            onClick={() => setEarnDrawerOpen(true)}
+            className={`${styles.navLink} ${activeTab === 'home' ? styles.navActive : ''}`}
+            onClick={() => setActiveTab('home')}
           >
-            Earn &amp; Level Up
+            Home
           </button>
-          <button type="button" className={styles.navLink} onClick={() => setGameOpen(true)}>
-            XP Catcher
-          </button>
-          <Link
-            to="/Lvl-Dashboard/activity"
-            className={`${styles.navLink} ${
-              location.pathname === '/Lvl-Dashboard/activity' ? styles.navActive : ''
-            }`}
+          <button
+            type="button"
+            className={`${styles.navLink} ${activeTab === 'earn' ? styles.navActive : ''}`}
+            onClick={() => setActiveTab('earn')}
           >
-            Recent Activity
-          </Link>
+            Earn
+          </button>
+          <button
+            type="button"
+            className={`${styles.navLink} ${activeTab === 'rewards' ? styles.navActive : ''}`}
+            onClick={() => setActiveTab('rewards')}
+          >
+            Rewards
+          </button>
+          <button
+            type="button"
+            className={`${styles.navLink} ${activeTab === 'wallet' ? styles.navActive : ''}`}
+            onClick={() => setActiveTab('wallet')}
+          >
+            Wallet
+          </button>
+          <button
+            type="button"
+            className={`${styles.navLink} ${activeTab === 'profile' ? styles.navActive : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
+          </button>
         </nav>
 
         <div className={styles.rightCluster}>
-          <div className={styles.walletPill} title="Demo wallet balance">
-            <VeCoin size={20} />
+          <button
+            type="button"
+            className={styles.walletPill}
+            onClick={() => setActiveTab('wallet')}
+            title="Open Wallet"
+          >
+            <VeCoin size={22} />
             <span>{(user?.wallet?.VEs ?? 1240).toLocaleString('en-IN')} VEs</span>
-          </div>
+          </button>
 
           <button
             type="button"
@@ -84,14 +99,15 @@ export default function LevelHero({ onOpenDemo }) {
             <span>Demo States</span>
           </button>
 
-          <Link
-            to="/Lvl-Dashboard/activity"
+          <button
+            type="button"
             className={styles.bellBtn}
-            aria-label="Recent XP notifications"
+            onClick={() => setActiveTab('wallet')}
+            aria-label="Recent XP Activity & Notifications"
           >
             <Bell size={21} />
             <span className={styles.bellDot} aria-hidden="true" />
-          </Link>
+          </button>
         </div>
       </div>
 
