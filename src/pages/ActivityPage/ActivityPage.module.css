@@ -1,0 +1,66 @@
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-body);
+  padding: max(16px, var(--safe-top)) 16px calc(var(--bottom-nav-h) + var(--safe-bottom) + 24px);
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border-gold);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gold-200);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.summaryBanner {
+  border-radius: var(--radius-xl);
+  background: #11121b;
+  border: 1px solid var(--border-gold);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryTop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge {
+  width: 84px;
+  height: 68px;
+  object-fit: contain;
+}
+
+.lvlTag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold-300);
+}
+
+.xpBig {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-1);
+}

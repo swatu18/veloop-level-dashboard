@@ -1,0 +1,84 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 11px;
+  border-radius: 999px;
+  background: #232430;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.65);
+}
+
+.compact .track {
+  height: 9px;
+}
+
+.bar {
+  position: relative;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b88422 0%, #eab949 55%, #ffe699 100%);
+  box-shadow: 0 0 14px rgba(234, 185, 73, 0.55);
+  transition: width 0.85s var(--ease-out);
+  overflow: hidden;
+}
+
+.shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  animation: sweep 3.2s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-110%);
+  }
+  55%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.captionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.xpNeeded {
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.xpFraction {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+.percentBadge {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(229, 184, 79, 0.14);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-200);
+  font-weight: 700;
+  font-size: 11.5px;
+}

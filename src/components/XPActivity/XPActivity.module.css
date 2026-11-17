@@ -1,0 +1,232 @@
+.card {
+  border-radius: var(--radius-xl);
+  background: #11121b;
+  border: 1px solid var(--border-gold);
+  box-shadow: var(--shadow-card);
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  color: var(--text-1);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.viewAllLink {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-200);
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+.filterBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border-gold);
+  background: rgba(229, 184, 79, 0.1);
+  color: var(--gold-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.filterActive {
+  background: rgba(229, 184, 79, 0.25);
+  border-color: var(--gold-300);
+}
+
+.filterBar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filterChipActive {
+  background: rgba(229, 184, 79, 0.18);
+  border-color: var(--border-gold-strong);
+  color: var(--gold-200);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.row:hover {
+  border-color: var(--border-gold);
+  background: rgba(229, 184, 79, 0.05);
+}
+
+.iconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rowContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.amount {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-400);
+}
+
+.itemTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timestamp {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.chevron {
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+/* Empty State (PDF §40) */
+.emptyBox {
+  border-radius: 16px;
+  border: 1px dashed var(--border-gold);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.emptyTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-top: 4px;
+}
+
+.emptyText {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.emptyCta {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--gradient-gold);
+  color: #1a1204;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Today's Summary (Screen 6 bottom) */
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.summaryTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summaryTile {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(231, 194, 106, 0.16);
+  padding: 10px 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summaryVal {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-1);
+  line-height: 1.15;
+}
+
+.summarySub {
+  font-size: 11px;
+  color: var(--text-3);
+}

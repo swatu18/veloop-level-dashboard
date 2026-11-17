@@ -1,0 +1,115 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.card {
+  border-radius: var(--radius-xl);
+  background: #11121b;
+  border: 1px solid var(--border-soft);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.heroFlex,
+.rewardFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.hexSkel {
+  width: 88px;
+  height: 96px;
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+
+.xpLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lineSm {
+  width: 38%;
+  height: 12px;
+}
+
+.lineMd {
+  width: 62%;
+  height: 16px;
+}
+
+.lineLg {
+  width: 52%;
+  height: 30px;
+}
+
+.barSkel {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.btnSkel {
+  width: 110px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.chestSkel {
+  width: 112px;
+  height: 92px;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+.badgeRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.badgeSkel {
+  height: 140px;
+  border-radius: 14px;
+}
+
+.gameStageSkel {
+  height: 180px;
+  border-radius: 16px;
+}
+
+.activityRowSkel {
+  height: 52px;
+  border-radius: 12px;
+}
+
+.earnRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.earnCardSkel {
+  height: 120px;
+  border-radius: 14px;
+}
+
+@media (min-width: 992px) {
+  .topRow {
+    grid-template-columns: 1.25fr 1fr;
+  }
+}

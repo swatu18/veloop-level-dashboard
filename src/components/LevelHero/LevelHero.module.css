@@ -1,0 +1,242 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: max(10px, var(--safe-top));
+  margin-bottom: 14px;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.iconBtn,
+.bellBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.iconBtn:hover,
+.bellBtn:hover {
+  border-color: var(--border-gold-strong);
+  background: rgba(229, 184, 79, 0.08);
+}
+
+.bellDot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 0 2px #11121b;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.brandHex {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--gradient-gold);
+  color: #15120a;
+  font-weight: 800;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(229, 184, 79, 0.3);
+}
+
+.brandText {
+  font-size: 15px;
+  color: var(--text-1);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.brandText small {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-300);
+  letter-spacing: 1.4px;
+}
+
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(17, 18, 27, 0.75);
+  border: 1px solid var(--border-gold);
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.navLink {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.navLink:hover {
+  color: var(--text-1);
+}
+
+.navActive {
+  background: rgba(229, 184, 79, 0.16);
+  color: var(--gold-200);
+}
+
+.rightCluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.walletPill {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(229, 184, 79, 0.1);
+  border: 1px solid var(--border-gold);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gold-200);
+}
+
+.demoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  background: rgba(139, 92, 246, 0.12);
+  color: #ddd6fe;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.demoBtn:hover {
+  background: rgba(139, 92, 246, 0.22);
+  border-color: rgba(167, 139, 250, 0.75);
+}
+
+.greetingRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.greetingTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.greetingTitle {
+  font-size: clamp(1.22rem, 2.2vw, 1.65rem);
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.25;
+}
+
+.wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: waveHand 2.4s ease-in-out infinite;
+}
+
+@keyframes waveHand {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(14deg);
+  }
+  30% {
+    transform: rotate(-8deg);
+  }
+  45% {
+    transform: rotate(12deg);
+  }
+}
+
+.greetingSub {
+  margin-top: 3px;
+  font-size: clamp(0.84rem, 1.3vw, 0.96rem);
+  color: var(--text-2);
+}
+
+.quickPlayChip {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 239, 201, 0.55);
+  background: var(--gradient-gold);
+  color: #1a1204;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(229, 184, 79, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.quickPlayChip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(229, 184, 79, 0.36);
+}
+
+@media (min-width: 768px) {
+  .walletPill,
+  .quickPlayChip {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 992px) {
+  .desktopNav {
+    display: inline-flex;
+  }
+  .iconBtn {
+    display: none;
+  }
+}

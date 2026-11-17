@@ -1,0 +1,97 @@
+.section {
+  border-radius: var(--radius-xl);
+  background: #11121b;
+  border: 1px solid var(--border-gold);
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.titleCluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  background: linear-gradient(90deg, #f3cd74 0%, #d8dce8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotDone {
+  background: var(--green-400);
+}
+.dotCurrent {
+  background: var(--gold-300);
+}
+.dotNext {
+  background: var(--purple-400);
+}
+.dotLocked {
+  background: #5b5f73;
+}
+
+/* Mobile & small tablet: horizontal swipeable rail */
+.rail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 138px;
+}
+
+/* Desktop 1200px+: 5 columns × 2 rows like reference app */
+@media (min-width: 1200px) {
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    overflow: visible;
+  }
+  .rail > * {
+    min-width: 0;
+  }
+}

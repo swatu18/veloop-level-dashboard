@@ -1,0 +1,173 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(6, 7, 12, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fade 0.18s ease-out;
+}
+
+.sheet {
+  position: relative;
+  width: min(460px, 100%);
+  border-radius: 22px;
+  background: radial-gradient(
+      circle at 50% 0%,
+      rgba(229, 184, 79, 0.18) 0%,
+      rgba(17, 18, 27, 0.98) 65%
+    ),
+    #11121b;
+  border: 1px solid var(--border-gold-strong);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.badgeHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge {
+  width: 96px;
+  height: 76px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.kicker {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--gold-300);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-1);
+}
+
+.title span {
+  color: var(--gold-200);
+}
+
+.threshold {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.blockTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-2);
+  text-transform: uppercase;
+}
+
+.rewardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.rewardBox {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border-gold);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--gold-100);
+}
+
+.rewardImg {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.perkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-1);
+}
+
+.perkList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.checkIcon {
+  color: var(--green-400);
+}
+
+.lockIcon {
+  color: var(--text-3);
+}
+
+.doneBtn {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 12px;
+  border: 0;
+  background: var(--gradient-gold);
+  color: #1a1204;
+  font-weight: 800;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

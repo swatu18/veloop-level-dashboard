@@ -1,0 +1,119 @@
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(
+      900px 480px at 50% -120px,
+      rgba(229, 184, 79, 0.12) 0%,
+      transparent 70%
+    ),
+    var(--bg-body);
+  padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 20px);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 max(14px, var(--safe-left)) 0 max(14px, var(--safe-right));
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.heroLeftCol,
+.heroRightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.arcadeActivityGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.demoTag {
+  color: var(--gold-300);
+  font-weight: 600;
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 170;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #17150e;
+  border: 1px solid var(--border-gold-strong);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  color: var(--gold-100);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  max-width: 92vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+@media (min-width: 992px) {
+  .page {
+    padding-bottom: 40px;
+  }
+  .heroGrid {
+    grid-template-columns: 1.12fr 1fr;
+    align-items: stretch;
+  }
+  /* On desktop, put Next-Level Reward above Quick Earn Grid in right column */
+  .heroRightCol {
+    flex-direction: column-reverse;
+  }
+  .arcadeActivityGrid {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: stretch;
+  }
+  .toast {
+    bottom: 24px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 32px;
+  }
+  .main,
+  .heroGrid,
+  .arcadeActivityGrid {
+    gap: 20px;
+  }
+}
