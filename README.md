@@ -208,6 +208,13 @@ src/
 
 ---
 
-## 13. Author
+## 13. Live Demo
+
+- **Production Dashboard (`/Lvl-Dashboard`):** https://veloop-level-dashboard-nine.vercel.app/Lvl-Dashboard
+- **Recent Activity Route (`/Lvl-Dashboard/activity`):** https://veloop-level-dashboard-nine.vercel.app/Lvl-Dashboard/activity
+
+---
+
+## 14. Author
 
 - **VELOOP Frontend Development Team – Task 16 Submission**
