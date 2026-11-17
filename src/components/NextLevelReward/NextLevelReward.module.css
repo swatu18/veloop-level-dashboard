@@ -149,30 +149,79 @@
 
 .chestWrap {
   position: relative;
-  width: 136px;
-  height: 112px;
+  width: 146px;
+  height: 126px;
   background: transparent;
   border: 0;
   padding: 0;
   flex-shrink: 0;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 
 .chestGlow {
   position: absolute;
-  width: 110px;
-  height: 110px;
+  width: 122px;
+  height: 122px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(229, 184, 79, 0.32) 0%, transparent 72%);
+  background: radial-gradient(circle, rgba(229, 184, 79, 0.36) 0%, transparent 72%);
   pointer-events: none;
+}
+
+.coinShower {
+  position: absolute;
+  inset: -6px 0 30px 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fallingCoin {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  animation: coinDrop 2.6s ease-in infinite;
+}
+
+.fc1 {
+  left: 22%;
+  animation-delay: 0s;
+}
+.fc2 {
+  left: 46%;
+  animation-delay: 0.65s;
+}
+.fc3 {
+  left: 66%;
+  animation-delay: 1.3s;
+}
+.fc4 {
+  left: 34%;
+  animation-delay: 1.95s;
+}
+
+@keyframes coinDrop {
+  0% {
+    transform: translateY(-10px) scale(0.75) rotate(-15deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(54px) scale(0.95) rotate(22deg);
+    opacity: 0;
+  }
 }
 
 .chestImg {
   position: relative;
-  width: 132px;
+  z-index: 1;
+  width: 136px;
   height: auto;
   object-fit: contain;
   transition: transform 0.28s var(--ease-out);

@@ -1,5 +1,24 @@
 .token {
   display: inline-block;
   flex-shrink: 0;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.55));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.flamePulse {
+  animation: flameFlicker 2.2s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+
+@keyframes flameFlicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 4px 12px rgba(249, 115, 22, 0.45));
+  }
+  50% {
+    transform: scale(1.06, 1.09) rotate(-2deg);
+    filter: drop-shadow(0 6px 18px rgba(251, 191, 36, 0.7));
+  }
 }

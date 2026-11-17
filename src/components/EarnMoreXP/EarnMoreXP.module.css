@@ -199,12 +199,100 @@
   color: var(--text-2);
 }
 
+.walletStage {
+  position: relative;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin: 4px 0;
+  overflow: hidden;
+}
+
+.walletAura {
+  position: absolute;
+  width: 135px;
+  height: 135px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(229, 184, 79, 0.28) 0%, transparent 72%);
+  pointer-events: none;
+}
+
+.walletStream {
+  position: absolute;
+  inset: 0 0 42px 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.streamCoin {
+  position: absolute;
+  top: -8px;
+  opacity: 0;
+  animation: walletFlow 2.4s ease-in infinite;
+}
+
+.sc1 {
+  left: 34%;
+  animation-delay: 0s;
+}
+.sc2 {
+  left: 48%;
+  animation-delay: 0.6s;
+}
+.sc3 {
+  left: 60%;
+  animation-delay: 1.2s;
+}
+.sc4 {
+  left: 42%;
+  animation-delay: 1.8s;
+}
+
+@keyframes walletFlow {
+  0% {
+    transform: translateY(-12px) scale(0.75) rotate(-18deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(66px) scale(0.92) rotate(18deg);
+    opacity: 0;
+  }
+}
+
 .walletArt {
+  position: relative;
+  z-index: 1;
   width: 118px;
   height: auto;
-  align-self: center;
-  margin: 4px 0;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.65));
+  animation: walletFloat 3.4s ease-in-out infinite;
+}
+
+@keyframes walletFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.veBonusBadge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(229, 184, 79, 0.16);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-200);
 }
 
 .keepGoingFooter,

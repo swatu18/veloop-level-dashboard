@@ -385,7 +385,62 @@
   border-radius: 20px;
   overflow: hidden;
   touch-action: none;
-  cursor: ew-resize;
+  cursor: grab;
+}
+
+.arena:active {
+  cursor: grabbing;
+}
+
+/* Ambient floating background bokeh glows */
+.ambientBg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambientOrb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(26px);
+  opacity: 0.35;
+  animation: driftOrb 6s ease-in-out infinite alternate;
+}
+
+.amb1 {
+  width: 140px;
+  height: 140px;
+  left: 10%;
+  top: 18%;
+  background: radial-gradient(circle, #9333ea 0%, transparent 70%);
+}
+
+.amb2 {
+  width: 160px;
+  height: 160px;
+  right: 8%;
+  top: 32%;
+  background: radial-gradient(circle, #f59e0b 0%, transparent 70%);
+  animation-delay: 1.5s;
+}
+
+.amb3 {
+  width: 130px;
+  height: 130px;
+  left: 35%;
+  bottom: 22%;
+  background: radial-gradient(circle, #22c55e 0%, transparent 70%);
+  animation-delay: 3s;
+}
+
+@keyframes driftOrb {
+  0% {
+    transform: translate(0, 0) scale(0.95);
+  }
+  100% {
+    transform: translate(14px, -18px) scale(1.12);
+  }
 }
 
 .countdownOverlay {
@@ -419,30 +474,45 @@
   flex-direction: column;
   align-items: center;
   pointer-events: none;
+  will-change: top, left;
 }
 
 .lightStreak {
   position: absolute;
-  bottom: 65%;
-  width: 34px;
-  height: 88px;
+  bottom: 58%;
+  width: 38px;
+  height: 112px;
   border-radius: 999px;
   pointer-events: none;
-  opacity: 0.55;
-  filter: blur(4px);
+  opacity: 0.72;
+  filter: blur(5px);
 }
 
-.streak_orb .lightStreak {
-  background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.65) 100%);
+.itemHalo {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.45;
+  filter: blur(8px);
 }
-.streak_coin .lightStreak {
-  background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.65) 100%);
+
+.streak_orb .lightStreak,
+.streak_orb .itemHalo {
+  background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.85) 100%);
 }
-.streak_gem .lightStreak {
-  background: linear-gradient(180deg, transparent 0%, rgba(34, 197, 94, 0.65) 100%);
+.streak_coin .lightStreak,
+.streak_coin .itemHalo {
+  background: linear-gradient(180deg, transparent 0%, rgba(251, 191, 36, 0.85) 100%);
 }
-.streak_rocket .lightStreak {
-  background: linear-gradient(180deg, transparent 0%, rgba(251, 146, 60, 0.75) 100%);
+.streak_gem .lightStreak,
+.streak_gem .itemHalo {
+  background: linear-gradient(180deg, transparent 0%, rgba(34, 197, 94, 0.85) 100%);
+}
+.streak_rocket .lightStreak,
+.streak_rocket .itemHalo {
+  background: linear-gradient(180deg, transparent 0%, rgba(251, 146, 60, 0.9) 100%);
 }
 
 .rocketBubble {
@@ -484,28 +554,30 @@
 
 .basketActor {
   position: absolute;
-  bottom: 4%;
-  transform: translateX(-50%);
-  width: 196px;
+  bottom: 3%;
+  transform: translate3d(-50%, 0, 0);
+  width: 192px;
   display: flex;
   flex-direction: column;
   align-items: center;
   pointer-events: none;
+  will-change: left;
 }
 
 .basketImg {
-  width: 188px;
-  height: auto;
-  filter: drop-shadow(0 12px 26px rgba(229, 184, 79, 0.48));
+  width: 178px;
+  height: 112px;
+  object-fit: fill;
+  filter: drop-shadow(0 12px 26px rgba(229, 184, 79, 0.52));
 }
 
 .basketFloorRing {
-  width: 220px;
+  width: 215px;
   height: 26px;
   margin-top: -12px;
   border-radius: 50%;
-  border: 1px solid rgba(229, 184, 79, 0.36);
-  background: radial-gradient(ellipse, rgba(229, 184, 79, 0.28) 0%, transparent 72%);
+  border: 1px solid rgba(229, 184, 79, 0.42);
+  background: radial-gradient(ellipse, rgba(229, 184, 79, 0.32) 0%, transparent 72%);
 }
 
 /* Scoreboard (Screen 2 bottom) */

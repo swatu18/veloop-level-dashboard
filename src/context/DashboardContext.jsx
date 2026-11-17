@@ -5,7 +5,8 @@ import { GAME_CONFIG } from '../data/game.config';
 import { fetchLevelProgress } from '../services/levelService';
 import { claimEarning, claimLevelReward, submitGameResult } from '../services/rewardService';
 
-const STORAGE_KEY = 'veloop_lvl_dashboard_v1';
+// Bumped storage key to v2 so stale test state (e.g. 7/8 tasks) resets cleanly to 4/8 & Level 04
+const STORAGE_KEY = 'veloop_lvl_dashboard_v2';
 
 const DashboardContext = createContext(null);
 
@@ -17,9 +18,10 @@ export function DashboardProvider({ children }) {
   const [cooldowns, setCooldowns] = useState({}); // { [earningId]: timestampMs }
   const [claimingId, setClaimingId] = useState(null);
 
-  // Game state
+  // Game & interactive modals state
   const [gameOpen, setGameOpen] = useState(false);
-  const [gameAvailable, setGameAvailable] = useState(true); // toggleable for Empty State (PDF §40)
+  const [activeModal, setActiveModal] = useState(null); // 'mini-games' | 'streak' | 'quiz' | null
+  const [gameAvailable, setGameAvailable] = useState(true);
   const [playsLeft, setPlaysLeft] = useState(GAME_CONFIG.playsPerDay);
   const [bestScore, setBestScore] = useState(92);
 
@@ -36,7 +38,7 @@ export function DashboardProvider({ children }) {
     }, 2700);
   }, []);
 
-  // Load initial data (checks localStorage first after initial skeleton so user sees loading state)
+  // Load initial data (always starts on Home with Level 04 · 6,420 XP · 4/8 tasks on first visit)
   const loadData = useCallback(async (opts = {}) => {
     setStatus('loading');
     try {
@@ -90,7 +92,16 @@ export function DashboardProvider({ children }) {
 
   // Award XP & VEs helper + automatic level-up detection
   const awardRewards = useCallback(
-    ({ xp = 0, ves = 0, gems = 0, title, icon = 'tasks', category = 'tasks', countTask = false }) => {
+    ({
+      xp = 0,
+      ves = 0,
+      gems = 0,
+      title,
+      icon = 'tasks',
+      category = 'tasks',
+      countTask = false,
+      incrementStreak = false,
+    }) => {
       setUser((prev) => {
         if (!prev) return prev;
         const oldProgress = getProgress(prev.currentXP);
@@ -122,6 +133,9 @@ export function DashboardProvider({ children }) {
             tasksDone: countTask
               ? Math.min(prev.today.tasksTotal, (prev.today.tasksDone ?? 0) + 1)
               : prev.today.tasksDone,
+            streakDays: incrementStreak
+              ? (prev.today?.streakDays ?? 7) + 1
+              : prev.today?.streakDays ?? 7,
           },
         };
       });
@@ -157,19 +171,30 @@ export function DashboardProvider({ children }) {
     []
   );
 
-  // Claim an earning card
+  // Claim or open any earning opportunity
   const handleClaimEarning = useCallback(
     async (earningId) => {
       const earning = EARNINGS.find((e) => e.id === earningId);
       if (!earning) return;
+
+      // Open interactive games/modals for game, mini-game, streak, and quiz
       if (earning.status === 'game') {
         setGameOpen(true);
         return;
       }
-      if (earning.status !== 'active') {
-        showToast(`${earning.title} is coming soon!`, 'muted');
+      if (earning.status === 'mini-game') {
+        setActiveModal('mini-games');
         return;
       }
+      if (earning.status === 'streak') {
+        setActiveModal('streak');
+        return;
+      }
+      if (earning.status === 'quiz') {
+        setActiveModal('quiz');
+        return;
+      }
+
       if ((cooldowns[earningId] ?? 0) > Date.now()) return;
 
       setClaimingId(earningId);
@@ -180,13 +205,18 @@ export function DashboardProvider({ children }) {
         }
         awardRewards({
           xp: res.xp,
-          ves: res.ves,
+          ves: earning.ves ?? res.ves ?? 0,
           title: earning.source,
           icon: earning.icon,
           category: earning.id === 'refer' ? 'referrals' : 'tasks',
           countTask: true,
         });
-        showToast(`+${res.xp} XP earned from ${earning.title}!`, 'gold');
+        showToast(
+          `+${res.xp} XP${earning.ves ? ` & +${earning.ves} VEs` : ''} earned from ${
+            earning.title
+          }!`,
+          'gold'
+        );
       } finally {
         setClaimingId(null);
       }
@@ -194,7 +224,39 @@ export function DashboardProvider({ children }) {
     [awardRewards, cooldowns, showToast]
   );
 
-  // Complete a mini-game run
+  // Complete VE Vault Memory Match or Quick Quiz
+  const handleCompleteMiniGame = useCallback(
+    ({ xp = 75, ves = 15, title = 'Mini Game Win' }) => {
+      awardRewards({
+        xp,
+        ves,
+        title,
+        icon: 'gamepad',
+        category: 'games',
+        countTask: true,
+      });
+      showToast(`+${xp} XP & +${ves} VEs unlocked from ${title}!`, 'gold');
+    },
+    [awardRewards, showToast]
+  );
+
+  // Claim 7-Day Streak Bonus
+  const handleClaimStreak = useCallback(() => {
+    if ((cooldowns.streak ?? 0) > Date.now()) return;
+    setCooldowns((prev) => ({ ...prev, streak: Date.now() + 24 * 60 * 60 * 1000 }));
+    awardRewards({
+      xp: 25,
+      ves: 10,
+      title: 'Streak Bonus',
+      icon: 'flame',
+      category: 'streaks',
+      countTask: true,
+      incrementStreak: false,
+    });
+    showToast('🔥 +25 XP & +10 VEs claimed from 7-Day Streak Bonus!', 'gold');
+  }, [awardRewards, cooldowns, showToast]);
+
+  // Complete an XP Catcher mini-game run
   const handleCompleteGame = useCallback(
     async ({ score, coinsCollected }) => {
       const res = await submitGameResult({ score });
@@ -250,42 +312,18 @@ export function DashboardProvider({ children }) {
           }
         : prev
     );
-    showToast(`Level ${ String(cfg.level).padStart(2, '0') } rewards claimed!`, 'gold');
+    showToast(`Level ${String(cfg.level).padStart(2, '0')} rewards claimed!`, 'gold');
     setLevelUpModal(null);
   }, [levelUpModal, showToast]);
 
-  // Demo helpers for testing & screenshot checklist (PDF §56–57)
   const demoActions = useMemo(
     () => ({
       resetToDefault: () => {
         localStorage.removeItem(STORAGE_KEY);
         setGameAvailable(true);
         loadData({ ignoreStorage: true });
+        showToast('Progress reset to Level 04 · 6,420 XP · 4/8 Tasks', 'gold');
       },
-      setAlmostLevelUp: () => {
-        setUser((prev) => (prev ? { ...prev, currentXP: 7970 } : prev));
-        showToast('Demo: XP set to 7,970 / 8,000 (1 claim to Level 05)', 'gold');
-      },
-      triggerLevelUpModal: () => {
-        const nextLvl = getLevelConfig(5);
-        setLevelUpModal({ fromLevel: 4, levelConfig: nextLvl });
-      },
-      triggerLoading: () => {
-        setStatus('loading');
-        setTimeout(() => setStatus('ready'), 2400);
-      },
-      triggerError: () => setStatus('error'),
-      triggerEmptyActivity: () => {
-        setActivity([]);
-        setGameAvailable(false);
-        setStatus('ready');
-        showToast('Demo: Empty activity & unavailable game state enabled', 'muted');
-      },
-      restoreActivity: () => {
-        setGameAvailable(true);
-        loadData({ ignoreStorage: true });
-      },
-      openGame: () => setGameOpen(true),
     }),
     [loadData, showToast]
   );
@@ -304,6 +342,8 @@ export function DashboardProvider({ children }) {
       claimingId,
       gameOpen,
       setGameOpen,
+      activeModal,
+      setActiveModal,
       gameAvailable,
       setGameAvailable,
       playsLeft,
@@ -316,6 +356,8 @@ export function DashboardProvider({ children }) {
       setEarnDrawerOpen,
       toast,
       handleClaimEarning,
+      handleCompleteMiniGame,
+      handleClaimStreak,
       handleCompleteGame,
       handleClaimLevelUp,
       retryLoad: () => loadData(),
@@ -330,6 +372,7 @@ export function DashboardProvider({ children }) {
       cooldowns,
       claimingId,
       gameOpen,
+      activeModal,
       gameAvailable,
       playsLeft,
       bestScore,
@@ -338,6 +381,8 @@ export function DashboardProvider({ children }) {
       earnDrawerOpen,
       toast,
       handleClaimEarning,
+      handleCompleteMiniGame,
+      handleClaimStreak,
       handleCompleteGame,
       handleClaimLevelUp,
       loadData,

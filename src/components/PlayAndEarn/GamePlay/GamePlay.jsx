@@ -8,12 +8,11 @@ import styles from '../Game.module.css';
 
 /**
  * Interactive "XP CATCHER" gameplay screen matching Mockup Screen 2:
- *  - Header: Back arrow, "XP CATCHER (i)", timer pill ("⏱ 00:18")
- *  - Subtitle: "Catch XP orbs & coins · Score high for better rewards!"
- *  - Vertical glowing light trails + falling XP orbs, V-coins, green gems, and 2X rockets
- *  - Draggable / touch / mouse / keyboard golden wire-mesh collector basket
- *  - Floating "+10 XP" / "+5" catch popups
- *  - Bottom scoreboard: "YOUR SCORE 120" + "+5 VEs | 🚀 2X Multiplier"
+ *  - Zero-Lag Direct DOM Basket Tracking: pointer, touch, and keyboard movement
+ *    updates the golden bowl's CSS transform directly at 60–120fps without waiting
+ *    for React re-renders, and listens on `window` so dragging never gets stuck.
+ *  - Falling 3D XP Orbs, V-Coins, Emerald Gems & Rockets with vertical neon-gold,
+ *    purple, and emerald light beams + ambient floating background particles.
  */
 export default function GamePlay({ onFinish, onExit }) {
   const [countdown, setCountdown] = useState(GAME_CONFIG.countdownSec);
@@ -21,12 +20,13 @@ export default function GamePlay({ onFinish, onExit }) {
   const [score, setScore] = useState(0);
   const [coinsCaught, setCoinsCaught] = useState(0);
   const [multiplier, setMultiplier] = useState(1);
-  const [basketX, setBasketX] = useState(50); // percentage 10..90
   const [items, setItems] = useState([]);
   const [popups, setPopups] = useState([]);
 
   const stageRef = useRef(null);
-  const basketXRef = useRef(50);
+  const basketDomRef = useRef(null);
+  const basketXRef = useRef(50); // percentage 12..88
+  const draggingRef = useRef(false);
   const scoreRef = useRef(0);
   const coinsRef = useRef(0);
   const multRef = useRef(1);
@@ -34,16 +34,19 @@ export default function GamePlay({ onFinish, onExit }) {
   const keysRef = useRef({ left: false, right: false });
   const finishedRef = useRef(false);
 
-  const updateBasket = useCallback((pct) => {
-    const clamped = Math.max(11, Math.min(89, pct));
+  // Instant direct-DOM basket position update (zero React re-render overhead)
+  const applyBasketX = useCallback((pct) => {
+    const clamped = Math.max(12, Math.min(88, pct));
     basketXRef.current = clamped;
-    setBasketX(clamped);
+    if (basketDomRef.current) {
+      basketDomRef.current.style.left = `${clamped}%`;
+    }
   }, []);
 
   // 3-2-1 start countdown
   useEffect(() => {
     if (countdown <= 0) return;
-    const id = setTimeout(() => setCountdown((c) => c - 1), 850);
+    const id = setTimeout(() => setCountdown((c) => c - 1), 800);
     return () => clearTimeout(id);
   }, [countdown]);
 
@@ -61,24 +64,52 @@ export default function GamePlay({ onFinish, onExit }) {
     return () => clearTimeout(id);
   }, [countdown, timeLeft, onFinish]);
 
-  // Keyboard arrow / A-D controls
+  // Window-level pointer, mouse, touch & keyboard tracking so basket NEVER gets stuck
   useEffect(() => {
-    const onDown = (e) => {
+    const moveFromClientX = (clientX) => {
+      if (!stageRef.current || typeof clientX !== 'number') return;
+      const rect = stageRef.current.getBoundingClientRect();
+      if (!rect.width) return;
+      const pct = ((clientX - rect.left) / rect.width) * 100;
+      applyBasketX(pct);
+    };
+
+    const onPointerMove = (e) => {
+      if (draggingRef.current || e.pointerType === 'mouse') {
+        moveFromClientX(e.clientX);
+      }
+    };
+    const onPointerUp = () => {
+      draggingRef.current = false;
+    };
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        moveFromClientX(e.touches[0].clientX);
+      }
+    };
+    const onKeyDown = (e) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keysRef.current.left = true;
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keysRef.current.right = true;
       if (e.key === 'Escape') onExit();
     };
-    const onUp = (e) => {
+    const onKeyUp = (e) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keysRef.current.left = false;
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keysRef.current.right = false;
     };
-    window.addEventListener('keydown', onDown);
-    window.addEventListener('keyup', onUp);
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerup', onPointerUp, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
     return () => {
-      window.removeEventListener('keydown', onDown);
-      window.removeEventListener('keyup', onUp);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
     };
-  }, [onExit]);
+  }, [applyBasketX, onExit]);
 
   // Main 60fps spawn + physics + catch detection loop
   useEffect(() => {
@@ -87,22 +118,23 @@ export default function GamePlay({ onFinish, onExit }) {
     let rafId;
     let lastTime = performance.now();
     let spawnTimer = 0;
+    let itemsList = [];
 
     const pickKind = () => {
       const r = Math.random() * 100;
-      if (r < 45) return 'coin';
-      if (r < 78) return 'orb';
+      if (r < 44) return 'coin';
+      if (r < 77) return 'orb';
       if (r < 94) return 'gem';
       return 'rocket';
     };
 
     const tick = (now) => {
-      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      const dt = Math.min(0.045, (now - lastTime) / 1000);
       lastTime = now;
 
-      // Keyboard movement
-      if (keysRef.current.left) updateBasket(basketXRef.current - 62 * dt);
-      if (keysRef.current.right) updateBasket(basketXRef.current + 62 * dt);
+      // Smooth keyboard movement
+      if (keysRef.current.left) applyBasketX(basketXRef.current - 68 * dt);
+      if (keysRef.current.right) applyBasketX(basketXRef.current + 68 * dt);
 
       // Expire 2X multiplier
       if (multRef.current > 1 && now > multUntilRef.current) {
@@ -112,80 +144,82 @@ export default function GamePlay({ onFinish, onExit }) {
 
       // Spawn falling items
       spawnTimer += dt;
-      if (spawnTimer >= 0.42) {
+      if (spawnTimer >= 0.4) {
         spawnTimer = 0;
         const kind = pickKind();
-        const x = 12 + Math.random() * 76;
-        const speed = 34 + Math.random() * 20;
-        setItems((prev) => [
-          ...prev,
-          {
-            id: `${now}_${Math.random()}`,
-            kind,
-            x,
-            y: -6,
-            speed,
-          },
-        ]);
+        const x = 13 + Math.random() * 74;
+        const speed = 35 + Math.random() * 19;
+        itemsList.push({
+          id: `${now}_${Math.random()}`,
+          kind,
+          x,
+          y: -6,
+          speed,
+        });
       }
 
-      // Advance items & detect catches around basket rim (y: 66..79%)
-      setItems((prev) => {
-        const next = [];
-        for (const it of prev) {
-          const ny = it.y + it.speed * dt;
-          const inVerticalZone = ny >= 66 && ny <= 82;
-          const inHorizontalZone = Math.abs(it.x - basketXRef.current) <= 17.5;
+      // Advance items & detect catches around the wide golden bowl rim
+      const next = [];
+      let caughtSomething = false;
 
-          if (inVerticalZone && inHorizontalZone) {
-            if (it.kind === 'rocket') {
-              multRef.current = 2;
-              multUntilRef.current = now + 5000;
-              setMultiplier(2);
-              setPopups((p) => [
-                ...p.slice(-5),
-                { id: it.id, x: it.x, y: 65, text: '2X BOOST!' },
-              ]);
-            } else {
-              const base = GAME_CONFIG.items[it.kind]?.points ?? 5;
-              const gained = base * multRef.current;
-              scoreRef.current += gained;
-              setScore(scoreRef.current);
-              if (it.kind === 'coin') {
-                coinsRef.current += 1;
-                setCoinsCaught(coinsRef.current);
-              }
-              const label =
-                it.kind === 'orb'
-                  ? `+${gained} XP`
-                  : it.kind === 'gem'
-                  ? `+${gained} GEM`
-                  : `+${gained} VE`;
-              setPopups((p) => [...p.slice(-5), { id: it.id, x: it.x, y: 65, text: label }]);
+      for (const it of itemsList) {
+        const ny = it.y + it.speed * dt;
+        const inVerticalZone = ny >= 65 && ny <= 83;
+        const inHorizontalZone = Math.abs(it.x - basketXRef.current) <= 18;
+
+        if (inVerticalZone && inHorizontalZone) {
+          caughtSomething = true;
+          if (it.kind === 'rocket') {
+            multRef.current = 2;
+            multUntilRef.current = now + 5000;
+            setMultiplier(2);
+            setPopups((p) => [
+              ...p.slice(-5),
+              { id: it.id, x: it.x, y: 64, text: '🚀 2X BOOST!' },
+            ]);
+          } else {
+            const base = GAME_CONFIG.items[it.kind]?.points ?? 5;
+            const gained = base * multRef.current;
+            scoreRef.current += gained;
+            if (it.kind === 'coin') {
+              coinsRef.current += 1;
             }
-            continue;
+            const label =
+              it.kind === 'orb'
+                ? `+${gained} XP`
+                : it.kind === 'gem'
+                ? `+${gained} GEM`
+                : `+${gained} VE`;
+            setPopups((p) => [...p.slice(-5), { id: it.id, x: it.x, y: 64, text: label }]);
           }
-
-          if (ny < 94) {
-            next.push({ ...it, y: ny });
-          }
+          continue;
         }
-        return next;
-      });
+
+        if (ny < 95) {
+          next.push({ ...it, y: ny });
+        }
+      }
+
+      itemsList = next;
+      setItems([...itemsList]);
+      if (caughtSomething) {
+        setScore(scoreRef.current);
+        setCoinsCaught(coinsRef.current);
+      }
 
       rafId = requestAnimationFrame(tick);
     };
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [countdown, updateBasket]);
+  }, [countdown, applyBasketX]);
 
-  const handlePointerMove = (e) => {
+  const onArenaDown = (e) => {
+    draggingRef.current = true;
     if (!stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const pct = ((clientX - rect.left) / rect.width) * 100;
-    updateBasket(pct);
+    applyBasketX(((clientX - rect.left) / rect.width) * 100);
   };
 
   const vesPreview = Math.max(1, Math.min(12, Math.floor(coinsCaught / 2) + 3));
@@ -222,27 +256,31 @@ export default function GamePlay({ onFinish, onExit }) {
         </p>
       </div>
 
-      {/* Interactive Catch Arena (Touch + Mouse + Keyboard) */}
+      {/* Interactive Catch Arena with Ambient Background Orbs & Glowing Beams */}
       <div
         ref={stageRef}
         className={styles.arena}
-        onPointerDown={handlePointerMove}
-        onPointerMove={(e) => {
-          if (e.buttons === 1 || e.pointerType === 'touch' || e.pointerType === 'mouse') {
-            handlePointerMove(e);
-          }
-        }}
-        onTouchMove={handlePointerMove}
+        onPointerDown={onArenaDown}
+        onTouchStart={onArenaDown}
       >
+        {/* Ambient hovering background bokeh orbs */}
+        <div className={styles.ambientBg} aria-hidden="true">
+          <span className={`${styles.ambientOrb} ${styles.amb1}`} />
+          <span className={`${styles.ambientOrb} ${styles.amb2}`} />
+          <span className={`${styles.ambientOrb} ${styles.amb3}`} />
+        </div>
+
         {/* 3-2-1 Countdown Overlay */}
         {countdown > 0 && (
           <div className={styles.countdownOverlay}>
             <span className={styles.countdownNum}>{countdown}</span>
-            <span className={styles.countdownHint}>Move basket with finger, mouse or ← →</span>
+            <span className={styles.countdownHint}>
+              Slide anywhere with finger, mouse or ← → keys
+            </span>
           </div>
         )}
 
-        {/* Falling items with vertical glow streaks matching Screen 2 */}
+        {/* Falling items with glowing vertical light trails matching Screen 2 */}
         {items.map((it) => (
           <div
             key={it.id}
@@ -250,9 +288,10 @@ export default function GamePlay({ onFinish, onExit }) {
             style={{ left: `${it.x}%`, top: `${it.y}%` }}
           >
             <span className={styles.lightStreak} aria-hidden="true" />
+            <span className={styles.itemHalo} aria-hidden="true" />
             {it.kind === 'orb' && <XpOrb size={44} />}
             {it.kind === 'coin' && <VeCoin size={42} />}
-            {it.kind === 'gem' && <GemToken size={42} variant="green" />}
+            {it.kind === 'gem' && <GemToken size={44} variant="green" />}
             {it.kind === 'rocket' && (
               <span className={styles.rocketBubble}>
                 <Rocket size={24} />
@@ -272,9 +311,18 @@ export default function GamePlay({ onFinish, onExit }) {
           </span>
         ))}
 
-        {/* Golden Basket Collector */}
-        <div className={styles.basketActor} style={{ left: `${basketX}%` }}>
-          <img src={basketImg} alt="Collector basket" className={styles.basketImg} />
+        {/* Wide Shallow 3D Golden Bowl Collector */}
+        <div
+          ref={basketDomRef}
+          className={styles.basketActor}
+          style={{ left: '50%' }}
+        >
+          <img
+            src={basketImg}
+            alt="Golden collector bowl"
+            className={styles.basketImg}
+            draggable={false}
+          />
           <span className={styles.basketFloorRing} aria-hidden="true" />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDashboard } from '../../context/DashboardContext';
 import LevelHero from '../../components/LevelHero/LevelHero';
 import CurrentLevel from '../../components/CurrentLevel/CurrentLevel';
@@ -10,11 +10,15 @@ import GameContainer from '../../components/PlayAndEarn/GameContainer/GameContai
 import XPActivity from '../../components/XPActivity/XPActivity';
 import Recommendation from '../../components/Recommendation/Recommendation';
 import { ProfileView, WalletView } from '../../components/TabViews/TabViews';
+import {
+  MemoryGameModal,
+  QuickQuizModal,
+  StreakModal,
+} from '../../components/InteractiveModals/InteractiveModals';
 import LevelDetailsSheet from '../../components/LevelDetailsSheet/LevelDetailsSheet';
 import LevelUpModal from '../../components/LevelUpModal/LevelUpModal';
 import DashboardSkeleton from '../../components/Skeletons/DashboardSkeleton';
 import ErrorState from '../../components/States/ErrorState';
-import DemoToolbar from '../../components/States/DemoToolbar';
 import BottomNav from '../../components/BottomNav/BottomNav';
 import styles from './LevelDashboard.module.css';
 
@@ -22,12 +26,11 @@ import styles from './LevelDashboard.module.css';
  * Complete Level-Up Dashboard Page (`/Lvl-Dashboard`, PDF §37–39).
  *
  * Always opens on the **Home** tab (`activeTab === 'home'`) when visited.
- * Switching tabs via the Bottom Nav or Desktop Header (`Home`, `Earn`,
+ * Switching tabs via the Bottom Navigation Bar (`Home`, `Earn`,
  * `Rewards`, `Wallet`, `Profile`) renders the corresponding dedicated view.
  */
 export default function LevelDashboard() {
   const { status, activeTab, retryLoad, toast } = useDashboard();
-  const [demoOpen, setDemoOpen] = useState(false);
 
   return (
     <div className={styles.page}>
@@ -36,7 +39,7 @@ export default function LevelDashboard() {
       </a>
 
       <div className={styles.container}>
-        <LevelHero onOpenDemo={() => setDemoOpen(true)} />
+        <LevelHero />
 
         <main id="main-dashboard" className={styles.main}>
           {status === 'loading' && <DashboardSkeleton />}
@@ -99,15 +102,17 @@ export default function LevelDashboard() {
         <footer className={styles.footer}>
           <span>VELOOP Rewards · Gamified Level Progression &amp; Engagement Hub</span>
           <span className={styles.demoTag}>
-            Development / Demo Configuration · Body #161827
+            React + Vite · Body #161827
           </span>
         </footer>
       </div>
 
-      {/* Overlays / Modals / Mobile Nav */}
+      {/* Overlays / Modals / Strictly Bottom Navigation */}
       <LevelDetailsSheet />
       <LevelUpModal />
-      <DemoToolbar open={demoOpen} onClose={() => setDemoOpen(false)} />
+      <MemoryGameModal />
+      <StreakModal />
+      <QuickQuizModal />
       <BottomNav />
 
       {toast && (

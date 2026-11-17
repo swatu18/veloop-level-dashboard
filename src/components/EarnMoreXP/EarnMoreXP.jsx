@@ -1,40 +1,37 @@
 import React from 'react';
-import { ArrowRight, ArrowLeft, ChevronRight, BarChart3, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BarChart3, ChevronRight, Clock, Sparkles } from 'lucide-react';
 import { useDashboard } from '../../context/DashboardContext';
 import { EARNINGS, EARN_LIST_IDS, QUICK_EARN_IDS } from '../../data/earnings';
 import { useCooldown } from '../../hooks/useCooldown';
 import { formatReward, pad2 } from '../../data/levels';
 import LevelInfo from '../LevelInfo/LevelInfo';
 import XPProgress from '../XPProgress/XPProgress';
-import { GraphicIcon } from '../GameTokens/GameTokens';
+import { GraphicIcon, VeCoin, XpOrb } from '../GameTokens/GameTokens';
 import walletImg from '../../assets/illustrations/wallet.webp';
 import styles from './EarnMoreXP.module.css';
 
 /**
  * Single Earning Row / Card with live cooldown support.
+ * All items are playable / claimable.
  */
 function EarningListRow({ item, cooldownUntil, claiming, onSelect }) {
   const cd = useCooldown(cooldownUntil);
-  const isComingSoon = item.status === 'coming-soon';
 
   return (
     <button
       type="button"
-      className={`${styles.listRow} ${isComingSoon ? styles.rowComingSoon : ''}`}
+      className={styles.listRow}
       onClick={() => onSelect(item.id)}
       disabled={cd.active || claiming}
     >
       <div className={styles.rowIconWrap}>
-        <GraphicIcon
-          type={item.id === 'daily' ? 'tasks-green' : item.icon}
-          size={42}
-        />
+        <GraphicIcon type={item.icon} size={42} />
       </div>
 
       <div className={styles.rowBody}>
         <div className={styles.rowTitleLine}>
           <span className={styles.rowTitle}>{item.title}</span>
-          {isComingSoon && <span className={styles.soonBadge}>Coming Soon</span>}
+          {item.ves > 0 && <span className={styles.veBonusBadge}>+{item.ves} VEs</span>}
         </div>
         <span className={styles.rowDesc}>{item.description}</span>
         <span className={styles.rowXp}>
@@ -60,23 +57,21 @@ function EarningListRow({ item, cooldownUntil, claiming, onSelect }) {
  */
 function EarningFeatureCard({ item, cooldownUntil, claiming, onSelect }) {
   const cd = useCooldown(cooldownUntil);
-  const isComingSoon = item.status === 'coming-soon';
 
   return (
-    <article className={`${styles.featureCard} ${isComingSoon ? styles.cardSoon : ''}`}>
+    <article className={styles.featureCard}>
       <div className={styles.cardTop}>
         <div className={styles.cardIconBox}>
-          <GraphicIcon
-            type={item.id === 'daily' ? 'tasks-green' : item.icon}
-            size={40}
-          />
+          <GraphicIcon type={item.icon} size={42} />
         </div>
         <div className={styles.cardMeta}>
           <div className={styles.cardTitleRow}>
             <h3 className={styles.cardTitle}>{item.title}</h3>
-            {isComingSoon && <span className={styles.soonBadge}>Coming Soon</span>}
           </div>
-          <span className={styles.cardXpPill}>Earn {item.xpLabel}</span>
+          <span className={styles.cardXpPill}>
+            Earn {item.xpLabel}
+            {item.ves ? ` · +${item.ves} VEs` : ''}
+          </span>
         </div>
       </div>
 
@@ -84,15 +79,11 @@ function EarningFeatureCard({ item, cooldownUntil, claiming, onSelect }) {
 
       <button
         type="button"
-        className={`${styles.cardCta} ${
-          isComingSoon || cd.active ? styles.cardCtaDisabled : ''
-        }`}
+        className={`${styles.cardCta} ${cd.active ? styles.cardCtaDisabled : ''}`}
         onClick={() => onSelect(item.id)}
         disabled={cd.active || claiming}
       >
-        <span>
-          {cd.active ? cd.label : claiming ? 'Claiming...' : `${item.cta} →`}
-        </span>
+        <span>{cd.active ? cd.label : claiming ? 'Claiming...' : `${item.cta} →`}</span>
       </button>
     </article>
   );
@@ -127,18 +118,18 @@ export function QuickEarnGrid() {
 
       <div className={styles.quickGrid}>
         {quickItems.map((item) => {
-          const isSoon = item.status === 'coming-soon';
           const onCd = (cooldowns[item.id] ?? 0) > Date.now();
           return (
             <button
               key={item.id}
               type="button"
-              className={`${styles.quickTile} ${isSoon ? styles.quickTileSoon : ''}`}
+              className={styles.quickTile}
               onClick={() => handleClaimEarning(item.id)}
             >
-              {isSoon && <span className={styles.quickCornerTag}>Soon</span>}
-              {onCd && <span className={styles.quickCornerTag}>Cooldown</span>}
-              <GraphicIcon type={item.icon} size={42} />
+              <span className={styles.quickCornerTag}>
+                {onCd ? 'Done ✓' : item.xpLabel}
+              </span>
+              <GraphicIcon type={item.icon} size={44} />
               <span className={styles.quickLabel}>{item.short}</span>
             </button>
           );
@@ -149,7 +140,8 @@ export function QuickEarnGrid() {
 }
 
 /**
- * Full "EARN & LEVEL UP" section + Mockup Screen 4 modal/drawer view (PDF §22–25, §47).
+ * Full "EARN & LEVEL UP" section + Mockup Screen 4 modal/drawer view (PDF §22–25, §36, §47).
+ * Includes animated coins flowing into the leather wallet.
  */
 export default function EarnMoreXP() {
   const {
@@ -179,9 +171,11 @@ export default function EarnMoreXP() {
         </div>
 
         <div className={styles.desktopLayout}>
-          {/* Left Summary / Progress-to-Next-Level CTA Card (PDF §25 + Reference App) */}
+          {/* Left Summary / Action Hub Card with Animated Coins Flowing into Wallet (PDF §36) */}
           <aside className={styles.summaryCard}>
-            <span className={styles.summaryKicker}>ACTION HUB</span>
+            <span className={styles.summaryKicker}>
+              <Sparkles size={12} /> ACTION HUB
+            </span>
             <h3 className={styles.summaryTitle}>COMPLETE TASKS TO LEVEL UP</h3>
             <p className={styles.summaryCopy}>
               {progress.isMaxLevel ? (
@@ -212,11 +206,29 @@ export default function EarnMoreXP() {
               <span>Earn</span>
             </div>
 
-            <img
-              src={walletImg}
-              alt="VELOOP wallet with gold V coins"
-              className={styles.walletArt}
-            />
+            {/* Animated Coins & XP Orbs Flowing into the Wallet (PDF §36) */}
+            <div className={styles.walletStage}>
+              <span className={styles.walletAura} aria-hidden="true" />
+              <div className={styles.walletStream} aria-hidden="true">
+                <span className={`${styles.streamCoin} ${styles.sc1}`}>
+                  <VeCoin size={22} />
+                </span>
+                <span className={`${styles.streamCoin} ${styles.sc2}`}>
+                  <XpOrb size={20} />
+                </span>
+                <span className={`${styles.streamCoin} ${styles.sc3}`}>
+                  <VeCoin size={19} />
+                </span>
+                <span className={`${styles.streamCoin} ${styles.sc4}`}>
+                  <VeCoin size={23} />
+                </span>
+              </div>
+              <img
+                src={walletImg}
+                alt="VELOOP wallet with gold V coins"
+                className={styles.walletArt}
+              />
+            </div>
 
             <div className={styles.keepGoingFooter}>
               <span>Keep going! You&apos;re doing great!</span>
@@ -289,7 +301,9 @@ export default function EarnMoreXP() {
                   claiming={claimingId === item.id}
                   onSelect={(id) => {
                     handleClaimEarning(id);
-                    if (id === 'xp-catcher') setEarnDrawerOpen(false);
+                    if (id === 'xp-catcher' || id === 'mini-games' || id === 'streak' || id === 'quiz') {
+                      setEarnDrawerOpen(false);
+                    }
                   }}
                 />
               ))}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Lock, Sparkles } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { useDashboard } from '../../context/DashboardContext';
 import { formatReward, pad2 } from '../../data/levels';
 import LevelInfo from '../LevelInfo/LevelInfo';
 import XPProgress from '../XPProgress/XPProgress';
+import { GemToken, VeCoin } from '../GameTokens/GameTokens';
 import chestImg from '../../assets/illustrations/chest.webp';
 import coinsImg from '../../assets/illustrations/coins.webp';
 import gemsImg from '../../assets/illustrations/gems.webp';
@@ -12,16 +13,10 @@ import styles from './NextLevelReward.module.css';
 /**
  * Next-Level Reward & Partially-Locked Vault Card (PDF §15–17, §32, §43, Mockup Screen 1).
  *
- * Shows:
- *  - "Level 05 Rewards — Amazing rewards await you!"
- *  - 3D treasure chest + purple amethyst gems illustration
- *  - Partially-locked reward pills (+500 VEs, +25 Gems) with hover/click preview
- *  - "Reach Level 05 to unlock · 80%" progress bar
- *  - [i] transparent reward info tooltip (PDF §32)
- *  - "View Rewards" button opening the Level 05 reward breakdown
+ * Includes animated 3D golden V-coins and gems gently raining into the treasure chest.
  */
 export default function NextLevelReward() {
-  const { progress, setSelectedLevel, demoActions } = useDashboard();
+  const { progress, setSelectedLevel } = useDashboard();
   const [revealed, setRevealed] = useState(false);
 
   const targetLevel = progress.nextLevel ?? progress.currentLevel;
@@ -79,19 +74,10 @@ export default function NextLevelReward() {
             >
               View Rewards
             </button>
-            <button
-              type="button"
-              className={styles.previewCelebrationBtn}
-              onClick={demoActions.triggerLevelUpModal}
-              title="Preview the Level-Up Celebration screen"
-            >
-              <Sparkles size={13} />
-              <span>Preview Level-Up</span>
-            </button>
           </div>
         </div>
 
-        {/* 3D Treasure Chest & Amethyst Gems (matching Screen 1 bottom card) */}
+        {/* 3D Treasure Chest with Animated Falling Coins & Gems */}
         <button
           type="button"
           className={styles.chestWrap}
@@ -99,6 +85,23 @@ export default function NextLevelReward() {
           aria-label={`Inspect Level ${targetNum} reward chest`}
         >
           <span className={styles.chestGlow} aria-hidden="true" />
+
+          {/* Falling coins & gems shower into the chest */}
+          <div className={styles.coinShower} aria-hidden="true">
+            <span className={`${styles.fallingCoin} ${styles.fc1}`}>
+              <VeCoin size={20} />
+            </span>
+            <span className={`${styles.fallingCoin} ${styles.fc2}`}>
+              <GemToken size={19} variant="purple" />
+            </span>
+            <span className={`${styles.fallingCoin} ${styles.fc3}`}>
+              <VeCoin size={18} />
+            </span>
+            <span className={`${styles.fallingCoin} ${styles.fc4}`}>
+              <VeCoin size={21} />
+            </span>
+          </div>
+
           <img
             src={chestImg}
             alt="Golden reward chest with amethyst gems"

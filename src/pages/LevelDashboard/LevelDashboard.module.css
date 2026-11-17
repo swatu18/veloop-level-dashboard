@@ -88,7 +88,7 @@
 
 @media (min-width: 992px) {
   .page {
-    padding-bottom: 40px;
+    padding-bottom: 96px;
   }
   .heroGrid {
     grid-template-columns: 1.12fr 1fr;
@@ -103,7 +103,7 @@
     align-items: stretch;
   }
   .toast {
-    bottom: 24px;
+    bottom: 92px;
   }
 }
 

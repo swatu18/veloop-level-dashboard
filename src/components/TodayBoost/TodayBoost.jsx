@@ -12,7 +12,7 @@ import styles from './TodayBoost.module.css';
  *  3. Streak (7 Days)      → toggles the inline 7-Day Streak tracker banner
  */
 export default function TodayBoost() {
-  const { user, setActiveTab, setEarnDrawerOpen } = useDashboard();
+  const { user, setActiveTab, setEarnDrawerOpen, setActiveModal } = useDashboard();
   const [showStreakInfo, setShowStreakInfo] = useState(false);
 
   const xpToday = useCountUp(user?.today?.xpEarned ?? 215, 600);
@@ -55,8 +55,8 @@ export default function TodayBoost() {
         <button
           type="button"
           className={styles.tile}
-          onClick={() => setShowStreakInfo((v) => !v)}
-          title="View 7-Day Streak status"
+          onClick={() => setActiveModal('streak')}
+          title="Open 7-Day Streak Check-In"
         >
           <GraphicIcon type="flame" size={44} />
           <span className={styles.label}>Streak</span>
