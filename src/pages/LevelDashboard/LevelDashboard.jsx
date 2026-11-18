@@ -11,10 +11,14 @@ import XPActivity from '../../components/XPActivity/XPActivity';
 import Recommendation from '../../components/Recommendation/Recommendation';
 import { ProfileView, WalletView } from '../../components/TabViews/TabViews';
 import {
+  DailyMissionsModal,
   MemoryGameModal,
   QuickQuizModal,
+  ReferEarnModal,
   StreakModal,
+  WatchVideoModal,
 } from '../../components/InteractiveModals/InteractiveModals';
+import ConfettiRain from '../../components/ConfettiRain/ConfettiRain';
 import LevelDetailsSheet from '../../components/LevelDetailsSheet/LevelDetailsSheet';
 import LevelUpModal from '../../components/LevelUpModal/LevelUpModal';
 import DashboardSkeleton from '../../components/Skeletons/DashboardSkeleton';
@@ -30,7 +34,7 @@ import styles from './LevelDashboard.module.css';
  * `Rewards`, `Wallet`, `Profile`) renders the corresponding dedicated view.
  */
 export default function LevelDashboard() {
-  const { status, activeTab, retryLoad, toast } = useDashboard();
+  const { status, activeTab, retryLoad, confettiTrigger, toast } = useDashboard();
 
   return (
     <div className={styles.page}>
@@ -107,9 +111,13 @@ export default function LevelDashboard() {
         </footer>
       </div>
 
-      {/* Overlays / Modals / Strictly Bottom Navigation */}
+      {/* Reward Confetti Rain Animation + Interactive Modals + Strictly Bottom Nav */}
+      <ConfettiRain triggerKey={confettiTrigger} />
       <LevelDetailsSheet />
       <LevelUpModal />
+      <WatchVideoModal />
+      <DailyMissionsModal />
+      <ReferEarnModal />
       <MemoryGameModal />
       <StreakModal />
       <QuickQuizModal />

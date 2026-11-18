@@ -1,12 +1,15 @@
 /**
  * Earning opportunities (PDF §22–24, §47).
  *
- * Every single opportunity in the hub is interactive and playable:
- *  - 'active'      → direct claim / mission with cooldown
- *  - 'game'        → opens the XP Catcher 20s collector game
- *  - 'mini-game'   → opens the VE Vault Memory Match mini-game
- *  - 'streak'      → opens the 7-Day Streak Check-In & Bonus modal
- *  - 'quiz'        → opens the interactive 3-Question VELOOP Quick Quiz modal
+ * Every opportunity opens its own interactive modal or game before awarding XP:
+ *  - 'watch'       → opens Watch & Earn Sample Video Player modal (+50 XP & +5 VEs)
+ *  - 'daily'       → opens Daily Missions Interactive Checklist modal (+30 XP & +5 VEs)
+ *  - 'refer'       → opens Refer & Earn Invite & Referral Code modal (+100 XP & +15 VEs)
+ *  - 'game'        → opens the XP Catcher 20s collector game (+30 XP & +12 VEs)
+ *  - 'mini-game'   → opens the Mini Games Arcade Hub (XOX Tic-Tac-Toe, VE Vault Memory Match, Lucky Vault Tap)
+ *  - 'streak'      → opens the 7-Day Streak Check-In & Bonus modal (+25 XP & +10 VEs)
+ *  - 'quiz'        → opens the interactive 3-Question VELOOP Quick Quiz modal (+40 XP & +5 VEs)
+ *  - 'active'      → direct claimable challenge / quest
  */
 export const EARNINGS = [
   {
@@ -14,12 +17,12 @@ export const EARNINGS = [
     title: 'Watch & Earn',
     short: 'Watch & Earn',
     description: 'Watch ads and earn',
-    longDescription: 'Watch short sponsored videos to earn instant XP.',
+    longDescription: 'Watch a short sample promotional video to unlock +50 XP & +5 VEs.',
     xp: 50,
     ves: 5,
     xpLabel: '+50 XP',
     icon: 'watch',
-    status: 'active',
+    status: 'watch',
     cta: 'Start Watching',
     cooldownMs: 5 * 60 * 60 * 1000,
     source: 'Watch & Earn',
@@ -29,13 +32,13 @@ export const EARNINGS = [
     title: 'Daily Missions',
     short: 'Daily Tasks',
     description: 'Complete daily tasks',
-    longDescription: "Complete today's daily mission checklist.",
+    longDescription: "Complete today's interactive daily mission checklist.",
     xp: 30,
     ves: 5,
     xpLabel: '+30 XP',
     icon: 'tasks',
-    status: 'active',
-    cta: 'Claim Mission',
+    status: 'daily',
+    cta: 'Open Daily Missions',
     cooldownMs: 24 * 60 * 60 * 1000,
     source: 'Daily Mission Completed',
   },
@@ -44,12 +47,12 @@ export const EARNINGS = [
     title: 'Refer & Earn',
     short: 'Refer & Earn',
     description: 'Invite friends & earn',
-    longDescription: 'Invite friends and earn XP for every successful referral.',
+    longDescription: 'Share your referral code or invite a friend to earn +100 XP & +15 VEs.',
     xp: 100,
     ves: 15,
     xpLabel: '+100 XP',
     icon: 'refer',
-    status: 'active',
+    status: 'refer',
     cta: 'Invite Friends',
     cooldownMs: 2 * 60 * 60 * 1000,
     source: 'Referral Bonus',
@@ -72,14 +75,14 @@ export const EARNINGS = [
     id: 'mini-games',
     title: 'Mini Games',
     short: 'Mini Games',
-    description: 'Play games & win',
-    longDescription: 'Play VE Vault Memory Match to win +75 XP & +15 VEs.',
+    description: 'Play XOX, Match & Tap',
+    longDescription: 'Play XOX (Tic-Tac-Toe), VE Vault Memory Match, or Lucky Vault Tap.',
     xp: 75,
     ves: 15,
     xpLabel: '+75 XP',
     icon: 'gamepad',
     status: 'mini-game',
-    cta: 'Play Vault Match',
+    cta: 'Open Mini Games',
     source: 'Mini Game Win',
   },
   {

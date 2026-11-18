@@ -13,7 +13,7 @@ import styles from '../Game.module.css';
  *  - Reset / Replay state
  */
 export default function GameContainer() {
-  const { gameOpen, setGameOpen, handleCompleteGame } = useDashboard();
+  const { gameOpen, setGameOpen, handleCompleteGame, fireConfetti, lastResultSeen } = useDashboard();
   const [phase, setPhase] = useState('play'); // 'play' | 'result'
   const [lastResult, setLastResult] = useState(null);
   const [runKey, setRunKey] = useState(1);
@@ -29,8 +29,11 @@ export default function GameContainer() {
 
   const handleClose = useCallback(() => {
     setGameOpen(false);
+    if (phase === 'result') {
+      fireConfetti();
+    }
     setPhase('play');
-  }, [setGameOpen]);
+  }, [setGameOpen, phase, fireConfetti]);
 
   const handleReplay = useCallback(() => {
     setRunKey((k) => k + 1);

@@ -25,11 +25,16 @@ export function DashboardProvider({ children }) {
   const [playsLeft, setPlaysLeft] = useState(GAME_CONFIG.playsPerDay);
   const [bestScore, setBestScore] = useState(92);
 
-  // Modals / sheets
+  // Modals / sheets / confetti rain
   const [levelUpModal, setLevelUpModal] = useState(null); // { levelConfig, fromLevel } | null
   const [selectedLevel, setSelectedLevel] = useState(null); // level number for roadmap details sheet
   const [earnDrawerOpen, setEarnDrawerOpen] = useState(false); // Screen 4 full view
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [toast, setToast] = useState(null);
+
+  const fireConfetti = useCallback(() => {
+    setConfettiTrigger((k) => k + 1);
+  }, []);
 
   const showToast = useCallback((msg, tone = 'gold') => {
     setToast({ id: Date.now(), msg, tone });
@@ -177,21 +182,24 @@ export function DashboardProvider({ children }) {
       const earning = EARNINGS.find((e) => e.id === earningId);
       if (!earning) return;
 
-      // Open interactive games/modals for game, mini-game, streak, and quiz
+      // Open interactive modals/games for watch, daily, refer, game, mini-game, streak, and quiz
       if (earning.status === 'game') {
         setGameOpen(true);
         return;
       }
-      if (earning.status === 'mini-game') {
-        setActiveModal('mini-games');
-        return;
-      }
-      if (earning.status === 'streak') {
-        setActiveModal('streak');
-        return;
-      }
-      if (earning.status === 'quiz') {
-        setActiveModal('quiz');
+      if (
+        earning.status === 'watch' ||
+        earning.status === 'daily' ||
+        earning.status === 'refer' ||
+        earning.status === 'mini-game' ||
+        earning.status === 'streak' ||
+        earning.status === 'quiz'
+      ) {
+        if ((cooldowns[earningId] ?? 0) > Date.now() && earning.status !== 'mini-game') {
+          showToast(`${earning.title} is on cooldown!`, 'muted');
+          return;
+        }
+        setActiveModal(earning.status === 'mini-game' ? 'mini-games' : earning.status);
         return;
       }
 
@@ -211,8 +219,9 @@ export function DashboardProvider({ children }) {
           category: earning.id === 'refer' ? 'referrals' : 'tasks',
           countTask: true,
         });
+        fireConfetti();
         showToast(
-          `+${res.xp} XP${earning.ves ? ` & +${earning.ves} VEs` : ''} earned from ${
+          `🎉 +${res.xp} XP${earning.ves ? ` & +${earning.ves} VEs` : ''} earned from ${
             earning.title
           }!`,
           'gold'
@@ -221,10 +230,31 @@ export function DashboardProvider({ children }) {
         setClaimingId(null);
       }
     },
-    [awardRewards, cooldowns, showToast]
+    [awardRewards, cooldowns, fireConfetti, showToast]
   );
 
-  // Complete VE Vault Memory Match or Quick Quiz
+  // Complete Watch & Earn Video, Daily Missions Checklist, or Refer & Earn Modal
+  const handleCompleteActionModal = useCallback(
+    ({ earningId, xp, ves = 0, title, icon = 'tasks', category = 'tasks' }) => {
+      const earning = EARNINGS.find((e) => e.id === earningId);
+      if (earning?.cooldownMs > 0) {
+        setCooldowns((prev) => ({ ...prev, [earningId]: Date.now() + earning.cooldownMs }));
+      }
+      awardRewards({
+        xp,
+        ves,
+        title,
+        icon,
+        category,
+        countTask: true,
+      });
+      fireConfetti();
+      showToast(`🎉 +${xp} XP & +${ves} VEs unlocked from ${title}!`, 'gold');
+    },
+    [awardRewards, fireConfetti, showToast]
+  );
+
+  // Complete XOX Tic-Tac-Toe, VE Vault Memory Match, Vault Sprint, or Quick Quiz
   const handleCompleteMiniGame = useCallback(
     ({ xp = 75, ves = 15, title = 'Mini Game Win' }) => {
       awardRewards({
@@ -235,9 +265,10 @@ export function DashboardProvider({ children }) {
         category: 'games',
         countTask: true,
       });
-      showToast(`+${xp} XP & +${ves} VEs unlocked from ${title}!`, 'gold');
+      fireConfetti();
+      showToast(`🎉 +${xp} XP & +${ves} VEs unlocked from ${title}!`, 'gold');
     },
-    [awardRewards, showToast]
+    [awardRewards, fireConfetti, showToast]
   );
 
   // Claim 7-Day Streak Bonus
@@ -253,8 +284,9 @@ export function DashboardProvider({ children }) {
       countTask: true,
       incrementStreak: false,
     });
+    fireConfetti();
     showToast('🔥 +25 XP & +10 VEs claimed from 7-Day Streak Bonus!', 'gold');
-  }, [awardRewards, cooldowns, showToast]);
+  }, [awardRewards, cooldowns, fireConfetti, showToast]);
 
   // Complete an XP Catcher mini-game run
   const handleCompleteGame = useCallback(
@@ -273,6 +305,7 @@ export function DashboardProvider({ children }) {
         category: 'games',
         countTask: false,
       });
+      fireConfetti();
 
       return {
         score,
@@ -282,7 +315,7 @@ export function DashboardProvider({ children }) {
         isNewBest,
       };
     },
-    [awardRewards, bestScore]
+    [awardRewards, bestScore, fireConfetti]
   );
 
   // Claim level-up modal rewards
@@ -312,9 +345,10 @@ export function DashboardProvider({ children }) {
           }
         : prev
     );
-    showToast(`Level ${String(cfg.level).padStart(2, '0')} rewards claimed!`, 'gold');
+    fireConfetti();
+    showToast(`🎉 Level ${String(cfg.level).padStart(2, '0')} rewards claimed!`, 'gold');
     setLevelUpModal(null);
-  }, [levelUpModal, showToast]);
+  }, [levelUpModal, fireConfetti, showToast]);
 
   const demoActions = useMemo(
     () => ({
@@ -354,8 +388,11 @@ export function DashboardProvider({ children }) {
       setSelectedLevel,
       earnDrawerOpen,
       setEarnDrawerOpen,
+      confettiTrigger,
+      fireConfetti,
       toast,
       handleClaimEarning,
+      handleCompleteActionModal,
       handleCompleteMiniGame,
       handleClaimStreak,
       handleCompleteGame,
@@ -379,8 +416,11 @@ export function DashboardProvider({ children }) {
       levelUpModal,
       selectedLevel,
       earnDrawerOpen,
+      confettiTrigger,
+      fireConfetti,
       toast,
       handleClaimEarning,
+      handleCompleteActionModal,
       handleCompleteMiniGame,
       handleClaimStreak,
       handleCompleteGame,

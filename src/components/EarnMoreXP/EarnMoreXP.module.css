@@ -201,7 +201,7 @@
 
 .walletStage {
   position: relative;
-  height: 150px;
+  height: 172px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -269,7 +269,7 @@
 .walletArt {
   position: relative;
   z-index: 1;
-  width: 118px;
+  width: 162px;
   height: auto;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.65));
   animation: walletFloat 3.4s ease-in-out infinite;

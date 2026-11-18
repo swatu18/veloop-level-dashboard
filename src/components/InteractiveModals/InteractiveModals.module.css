@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 145;
-  background: rgba(5, 6, 11, 0.84);
+  background: rgba(5, 6, 11, 0.85);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
@@ -13,7 +13,7 @@
 
 .modal {
   position: relative;
-  width: min(440px, 100%);
+  width: min(460px, 100%);
   max-height: 92dvh;
   overflow-y: auto;
   border-radius: 26px;
@@ -63,7 +63,7 @@
 }
 
 .title {
-  font-size: 1.35rem;
+  font-size: 1.32rem;
   font-weight: 800;
   color: var(--text-1);
 }
@@ -77,10 +77,358 @@
   color: var(--gold-200);
 }
 
+/* ==========================================================================
+   Watch & Earn Sample Video Player
+   ========================================================================== */
+.videoStage {
+  position: relative;
+  width: 100%;
+  height: 215px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #080910;
+  border: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoOverlayArt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(10, 11, 18, 0.85) 80%);
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.videoOverlaySubtle {
+  background: linear-gradient(180deg, rgba(8, 9, 16, 0.15) 0%, rgba(8, 9, 16, 0.65) 100%);
+}
+
+.videoOverlaySubtle .videoCenterArt {
+  width: 82px;
+  opacity: 0.92;
+}
+
+.videoCenterArt {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.75));
+  animation: floatArt 2.8s ease-in-out infinite;
+}
+
+@keyframes floatArt {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.videoPromoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(16, 17, 26, 0.86);
+  border: 1px solid var(--border-gold-strong);
+  color: var(--gold-100);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.videoControls {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(12, 13, 21, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vidCtrlBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border-gold);
+  background: rgba(229, 184, 79, 0.14);
+  color: var(--gold-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.vidProgressTrack {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.vidProgressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--gradient-gold-h);
+  transition: width 0.35s linear;
+}
+
+.vidTimerBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold-200);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Daily Missions Checklist
+   ========================================================================== */
+.missionList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.missionRow {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(231, 194, 106, 0.18);
+  padding: 11px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.missionRowDone {
+  border-color: rgba(74, 222, 128, 0.38);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.missionStatusIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(229, 184, 79, 0.14);
+  color: var(--gold-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.missionRowDone .missionStatusIcon {
+  background: rgba(34, 197, 94, 0.18);
+  color: var(--green-400);
+}
+
+.missionCopy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.missionTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.missionXp {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--gold-200);
+}
+
+.donePill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.18);
+  color: var(--green-400);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.completeStepBtn {
+  padding: 6px 12px;
+  border-radius: 9px;
+  border: 0;
+  background: var(--gradient-gold);
+  color: #1a1204;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Refer & Earn Modal
+   ========================================================================== */
+.refCodeBox {
+  border-radius: 14px;
+  background: rgba(229, 184, 79, 0.1);
+  border: 1px dashed var(--border-gold-strong);
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.refCodeLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-2);
+}
+
+.refCodeValue {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--gold-100);
+}
+
+.copyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border-gold-strong);
+  background: rgba(229, 184, 79, 0.18);
+  color: var(--gold-100);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inviteInputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.inviteInput {
+  flex: 1;
+  border-radius: 11px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 9px 12px;
+  color: var(--text-1);
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.inviteInput:focus {
+  outline: 1px solid var(--gold-300);
+}
+
+.sendInviteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 14px;
+  border-radius: 11px;
+  border: 0;
+  background: var(--gradient-gold);
+  color: #1a1204;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.shareGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.shareChannelBtn {
+  padding: 9px 8px;
+  border-radius: 11px;
+  border: 1px solid var(--border-gold);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-1);
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.shareChannelBtn:hover {
+  background: rgba(229, 184, 79, 0.12);
+}
+
+/* ==========================================================================
+   Mini-Games Arcade Tabs + XOX (Tic-Tac-Toe) + Memory + Sprint
+   ========================================================================== */
+.gameTabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 5px;
+  border-radius: 13px;
+  border: 1px solid var(--border-soft);
+}
+
+.gameTabBtn {
+  padding: 7px 8px;
+  border-radius: 9px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 11.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.gameTabActive {
+  background: var(--gradient-gold);
+  color: #1a1204;
+}
+
+.subGameWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .metaBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   padding: 8px 12px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.035);
@@ -93,6 +441,13 @@
   color: var(--gold-200);
 }
 
+.xoxLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+}
+
 .resetLink {
   display: inline-flex;
   align-items: center;
@@ -101,6 +456,117 @@
   border: 0;
   color: var(--gold-300);
   font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.xoxBoard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 310px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.xoxCell {
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-gold);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, #12131f 85%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.xoxCell:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--gold-300);
+  box-shadow: 0 6px 16px rgba(229, 184, 79, 0.2);
+}
+
+.xoxCellWin {
+  border-color: var(--green-400);
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.22) 0%, #12131f 85%);
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.35);
+}
+
+.xoxTokenPop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.xoxMarkGold,
+.xoxMarkPurple {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xoxMarkGold {
+  background: var(--gold-300);
+  color: #1a1204;
+}
+
+.xoxMarkPurple {
+  background: #9333ea;
+  color: #ffffff;
+}
+
+.sprintNumber {
+  font-size: 1.65rem;
+  font-weight: 800;
+  background: var(--gradient-gold-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.miniTrophy {
+  width: 74px;
+  height: auto;
+}
+
+.winActions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.secondaryBtn {
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: 11px;
+  border: 1px solid var(--border-gold);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--gold-200);
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -149,7 +615,7 @@
 }
 
 .winBox {
-  padding: 18px 14px;
+  padding: 16px 14px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-gold);
@@ -165,7 +631,7 @@
 }
 
 .winTitle {
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 800;
   color: var(--text-1);
 }
@@ -178,7 +644,7 @@
 .rewardPills {
   display: flex;
   gap: 8px;
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 .rewardPill {
@@ -198,7 +664,7 @@
   border: 1px solid rgba(255, 243, 196, 0.65);
   background: var(--gradient-gold);
   color: #1a1204;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
