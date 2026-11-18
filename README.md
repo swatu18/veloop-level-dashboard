@@ -208,10 +208,11 @@ src/
 
 ---
 
-## 13. Live Demo
+## 13. Live Demo & GitHub Repository
 
 - **Production Dashboard (`/Lvl-Dashboard`):** https://veloop-level-dashboard-nine.vercel.app/Lvl-Dashboard
 - **Recent Activity Route (`/Lvl-Dashboard/activity`):** https://veloop-level-dashboard-nine.vercel.app/Lvl-Dashboard/activity
+- **GitHub Repository:** https://github.com/swatu18/veloop-level-dashboard
 
 ---
 
