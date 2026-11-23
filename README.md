@@ -227,4 +227,8 @@ src/
 
 ## 15. Author
 
-- **Swathi (`@swatu18`) – VELOOP Frontend Development Task 16 Submission**
+- **Name:** SWATHI G
+- **Intern ID:** VLRINT202603048
+- **Domain:** Frontend Development Intern
+- **Project:** Task 16 – VELOOP Rewards Complete Level-Up Dashboard Redesign
+- **GitHub:** [@swatu18](https://github.com/swatu18)
