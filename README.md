@@ -216,6 +216,15 @@ src/
 
 ---
 
-## 14. Author
+## 14. Submission Checklist Status (Task 16 – All 58 Sections Verified)
 
-- **VELOOP Frontend Development Team – Task 16 Submission**
+- **Level System:** Current Level (`04`), Current XP (`6,420 XP`), Required XP (`8,000 XP`), Remaining XP (`1,580 XP`), Next Level (`05`), Next-Level Reward (`+500 VEs & +25 Gems`), 10-Level Winged Badge Progression Roadmap (`Completed ✓`, `YOU ARE HERE`, `Next Goal`, `Locked 🔒`), Level Details Modal, and Level-Up Celebration Modal with Reward Confetti Rain.
+- **Play & Earn Games:** Mandatory **XP Catcher** 20-second skill game (`Start`, `3-2-1 Countdown`, `60fps Gameplay`, `Challenge Complete Trophy Screen`, `Score/Best Score`, `Play Again`) + **Mini-Games Arcade** (**XOX Tic-Tac-Toe**, **VE Vault Memory Match**, **1–9 Vault Sprint**).
+- **Earning & Action Hub:** Interactive **Watch & Earn** (sample video player), **Daily Missions** (3-step checklist), **Refer & Earn** (referral code & social sharing), **7-Day Streak Check-In**, **Quick Quiz**, **Daily Challenge**, **Weekly Quest**, and dynamic **Recommended for You** banner.
+- **UX, States & Responsiveness:** Skeleton loading states, friendly empty & error states, `[i]` transparent tooltips, `#161827` project-wide body background, and responsive layouts across iOS Mobile, Android Mobile, Tablet, Laptop, and Desktop (`320px` – `1920px+`).
+
+---
+
+## 15. Author
+
+- **Swathi (`@swatu18`) – VELOOP Frontend Development Task 16 Submission**
