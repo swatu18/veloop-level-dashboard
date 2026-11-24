@@ -20,10 +20,10 @@ export function DashboardProvider({ children }) {
 
   // Game & interactive modals state
   const [gameOpen, setGameOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState(null); // 'mini-games' | 'streak' | 'quiz' | null
+  const [activeModal, setActiveModal] = useState(null); // 'watch' | 'daily' | 'refer' | 'mini-games' | 'streak' | 'quiz' | null
   const [gameAvailable, setGameAvailable] = useState(true);
   const [playsLeft, setPlaysLeft] = useState(GAME_CONFIG.playsPerDay);
-  const [bestScore, setBestScore] = useState(92);
+  const [bestScore, setBestScore] = useState(50);
 
   // Modals / sheets / confetti rain
   const [levelUpModal, setLevelUpModal] = useState(null); // { levelConfig, fromLevel } | null
@@ -56,7 +56,7 @@ export function DashboardProvider({ children }) {
           setActivity(saved.activity ?? data.activity);
           setCooldowns(saved.cooldowns ?? {});
           setPlaysLeft(saved.playsLeft ?? GAME_CONFIG.playsPerDay);
-          setBestScore(saved.bestScore ?? 92);
+          setBestScore(saved.bestScore ?? 50);
         } catch {
           setUser(data.user);
           setActivity(data.activity);
@@ -67,7 +67,7 @@ export function DashboardProvider({ children }) {
         if (opts.ignoreStorage) {
           setCooldowns({});
           setPlaysLeft(GAME_CONFIG.playsPerDay);
-          setBestScore(92);
+          setBestScore(50);
         }
       }
       setStatus('ready');
@@ -77,7 +77,38 @@ export function DashboardProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    loadData();
+    const params = new URLSearchParams(window.location.search);
+    const stateParam = params.get('state');
+    const tabParam = params.get('tab');
+    const gameParam = params.get('game');
+
+    if (tabParam && ['home', 'earn', 'rewards', 'wallet', 'profile'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+
+    if (stateParam === 'loading') {
+      setStatus('loading');
+      return;
+    }
+
+    if (stateParam === 'error') {
+      loadData({ forceError: true, ignoreStorage: true });
+      return;
+    }
+
+    if (stateParam === 'empty') {
+      setGameAvailable(false);
+      loadData({ emptyActivity: true, ignoreStorage: true });
+      return;
+    }
+
+    loadData().then(() => {
+      if (stateParam === 'levelup') {
+        setLevelUpModal({ fromLevel: 4, levelConfig: getLevelConfig(5) });
+      } else if (gameParam === 'play' || gameParam === 'result') {
+        setGameOpen(true);
+      }
+    });
   }, [loadData]);
 
   // Persist changes
@@ -183,6 +214,10 @@ export function DashboardProvider({ children }) {
       if (!earning) return;
 
       // Open interactive modals/games for watch, daily, refer, game, mini-game, streak, and quiz
+      if (earning.status === 'coming-soon') {
+        showToast(`${earning.title} is an upcoming concept — Coming Soon!`, 'muted');
+        return;
+      }
       if (earning.status === 'game') {
         setGameOpen(true);
         return;
@@ -358,8 +393,26 @@ export function DashboardProvider({ children }) {
         loadData({ ignoreStorage: true });
         showToast('Progress reset to Level 04 · 6,420 XP · 4/8 Tasks', 'gold');
       },
+      previewLevelUp: (lvl = 5) => {
+        setLevelUpModal({ fromLevel: Math.max(1, lvl - 1), levelConfig: getLevelConfig(lvl) });
+        fireConfetti();
+      },
+      triggerLoading: () => {
+        setStatus('loading');
+        setTimeout(() => setStatus('ready'), 2200);
+      },
+      triggerEmpty: () => {
+        setActivity([]);
+        setGameAvailable(false);
+        setActiveTab('home');
+        setStatus('ready');
+        showToast('Showing Empty Activity & Unavailable Game states', 'muted');
+      },
+      triggerError: () => {
+        setStatus('error');
+      },
     }),
-    [loadData, showToast]
+    [loadData, fireConfetti, showToast]
   );
 
   const value = useMemo(

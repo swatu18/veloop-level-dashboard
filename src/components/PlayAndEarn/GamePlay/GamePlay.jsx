@@ -118,7 +118,17 @@ export default function GamePlay({ onFinish, onExit }) {
     let rafId;
     let lastTime = performance.now();
     let spawnTimer = 0;
-    let itemsList = [];
+    // Seed initial staggered tokens when play begins so action starts immediately (Screen 2)
+    let itemsList = [
+      { id: 'init_1', kind: 'orb', x: 20, y: 18, speed: 34 },
+      { id: 'init_2', kind: 'coin', x: 46, y: 10, speed: 36 },
+      { id: 'init_3', kind: 'gem', x: 78, y: 16, speed: 35 },
+      { id: 'init_4', kind: 'orb', x: 56, y: 34, speed: 33 },
+      { id: 'init_5', kind: 'coin', x: 26, y: 44, speed: 35 },
+      { id: 'init_6', kind: 'gem', x: 38, y: 28, speed: 34 },
+      { id: 'init_7', kind: 'coin', x: 74, y: 42, speed: 36 },
+    ];
+    setItems([...itemsList]);
 
     const pickKind = () => {
       const r = Math.random() * 100;

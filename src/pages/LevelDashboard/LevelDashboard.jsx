@@ -4,9 +4,10 @@ import LevelHero from '../../components/LevelHero/LevelHero';
 import CurrentLevel from '../../components/CurrentLevel/CurrentLevel';
 import TodayBoost from '../../components/TodayBoost/TodayBoost';
 import EarnMoreXP, { QuickEarnGrid } from '../../components/EarnMoreXP/EarnMoreXP';
+import EarnDrawer from '../../components/EarnMoreXP/EarnDrawer';
 import NextLevelReward from '../../components/NextLevelReward/NextLevelReward';
 import LevelRoadmap from '../../components/LevelRoadmap/LevelRoadmap';
-import GameContainer from '../../components/PlayAndEarn/GameContainer/GameContainer';
+import GameContainer, { GameModal } from '../../components/PlayAndEarn/GameContainer/GameContainer';
 import XPActivity from '../../components/XPActivity/XPActivity';
 import Recommendation from '../../components/Recommendation/Recommendation';
 import { ProfileView, WalletView } from '../../components/TabViews/TabViews';
@@ -82,8 +83,8 @@ export default function LevelDashboard() {
 
           {status === 'ready' && activeTab === 'earn' && (
             <>
+              <EarnMoreXP mobileListFirst />
               <Recommendation />
-              <EarnMoreXP />
               <GameContainer />
             </>
           )}
@@ -111,8 +112,10 @@ export default function LevelDashboard() {
         </footer>
       </div>
 
-      {/* Reward Confetti Rain Animation + Interactive Modals + Strictly Bottom Nav */}
+      {/* Reward Confetti Rain Animation + Global Drawer, Game & Interactive Modals + Strictly Bottom Nav */}
       <ConfettiRain triggerKey={confettiTrigger} />
+      <EarnDrawer />
+      <GameModal />
       <LevelDetailsSheet />
       <LevelUpModal />
       <WatchVideoModal />

@@ -10,7 +10,7 @@ import styles from './LevelDetailsSheet.module.css';
  * Click-to-inspect Level Details sheet (PDF §43: "Level Roadmap: Click → display level details").
  */
 export default function LevelDetailsSheet() {
-  const { selectedLevel, setSelectedLevel, progress } = useDashboard();
+  const { selectedLevel, setSelectedLevel, progress, demoActions } = useDashboard();
   if (!selectedLevel) return null;
 
   const cfg = getLevelConfig(selectedLevel);
@@ -92,14 +92,28 @@ export default function LevelDetailsSheet() {
           </ul>
         </div>
 
-        <button
-          type="button"
-          className={styles.doneBtn}
-          onClick={() => setSelectedLevel(null)}
-        >
-          <Sparkles size={15} />
-          <span>Got It</span>
-        </button>
+        <div className={styles.actionsRow}>
+          <button
+            type="button"
+            className={styles.doneBtn}
+            onClick={() => setSelectedLevel(null)}
+          >
+            <Sparkles size={15} />
+            <span>Got It</span>
+          </button>
+          {isNext && (
+            <button
+              type="button"
+              className={styles.previewUnlockBtn}
+              onClick={() => {
+                setSelectedLevel(null);
+                demoActions.previewLevelUp(cfg.level);
+              }}
+            >
+              Preview Level {num} Unlock Celebration
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

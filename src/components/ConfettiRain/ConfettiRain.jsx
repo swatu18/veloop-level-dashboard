@@ -42,8 +42,8 @@ export default function ConfettiRain({ triggerKey }) {
     const particles = Array.from({ length: 115 }, (_, i) => {
       const fromBurst = i < 45;
       return {
-        x: fromBurst ? width * (0.25 + Math.random() * 0.5) : Math.random() * width,
-        y: fromBurst ? height * 0.28 : -20 - Math.random() * height * 0.55,
+        x: fromBurst ? width * (0.12 + Math.random() * 0.76) : Math.random() * width,
+        y: fromBurst ? height * 0.08 : -20 - Math.random() * height * 0.55,
         vx: (Math.random() - 0.5) * (fromBurst ? 9 : 3.2),
         vy: fromBurst ? -4 - Math.random() * 6 : 2.8 + Math.random() * 4.5,
         gravity: 0.14 + Math.random() * 0.06,

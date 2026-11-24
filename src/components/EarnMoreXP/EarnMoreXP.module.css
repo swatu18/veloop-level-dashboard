@@ -144,6 +144,23 @@
   gap: 16px;
 }
 
+.mobileListFirst {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 992px) {
+  .mobileListFirst {
+    display: grid;
+    grid-template-columns: 295px 1fr;
+  }
+}
+
+.rowComingSoon,
+.cardSoon {
+  opacity: 0.85;
+}
+
 .summaryCard {
   border-radius: 18px;
   background: radial-gradient(

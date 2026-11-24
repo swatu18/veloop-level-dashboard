@@ -1,6 +1,7 @@
 .page {
   min-height: 100vh;
   min-height: 100dvh;
+  overflow-x: hidden;
   background: radial-gradient(
       900px 480px at 50% -120px,
       rgba(229, 184, 79, 0.12) 0%,
@@ -21,11 +22,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
@@ -34,11 +36,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
 }
 
 .arcadeActivityGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
